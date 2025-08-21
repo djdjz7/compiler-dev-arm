@@ -2,10 +2,11 @@
 FROM ubuntu:20.04 AS compiler-dev-arm-base
 
 # some arguments
-ARG KOOPA_REPO_URL=https://github.com/pku-minic/koopa.git
 ARG KOOPAC=koopac.tar.gz
-ARG SYSYRT_REPO_URL=https://github.com/pku-minic/sysy-runtime-lib.git
 ARG AUTOTEST=autotest
+ARG KOOPA=koopa.tar.gz
+ARG SYSYRTLIB=sysy-runtime-lib.tar.gz
+ARG CASES=compiler-dev-test-cases.tar.gz
 ARG INSTALL_DIR=/opt
 ARG LIB_INSTALL_DIR=${INSTALL_DIR}/lib
 ARG INC_INSTALL_DIR=${INSTALL_DIR}/include
@@ -67,7 +68,8 @@ ENV PATH="${BIN_INSTALL_DIR}:${PATH}"
 
 # install libkoopa
 WORKDIR ${LIB_INSTALL_DIR}
-RUN git clone --single-branch --depth 1 ${KOOPA_REPO_URL} koopa && \
+COPY ${KOOPA} .
+RUN mkdir koopa && tar xzf ${KOOPA} -C koopa && \
   cargo build --release --manifest-path koopa/crates/libkoopa/Cargo.toml && \
   mkdir -p native && \
   cp koopa/crates/libkoopa/target/release/libkoopa.a native && \
@@ -84,7 +86,8 @@ RUN mkdir kpc && tar xzf ${KOOPAC} -C kpc && \
 
 # install SysY runtime library
 WORKDIR ${LIB_INSTALL_DIR}
-RUN git clone --single-branch --depth 1 ${SYSYRT_REPO_URL} sysyrt && \
+COPY ${SYSYRTLIB} .
+RUN mkdir sysyrt && tar xzf ${SYSYRTLIB} -C sysyrt && \
   make -C sysyrt libsysy && \
   mkdir -p native && cp sysyrt/build/libsysy.a native && \
   make NO_LIBC=1 \
@@ -97,13 +100,11 @@ RUN git clone --single-branch --depth 1 ${SYSYRT_REPO_URL} sysyrt && \
 # compiler development environment image
 FROM compiler-dev-arm-base AS compiler-dev-arm
 
-# some arguments
-ARG TEST_CASES_REPO_URL=https://github.com/pku-minic/compiler-dev-test-cases.git
-
 # install autotest and test cases
 WORKDIR ${BIN_INSTALL_DIR}
 COPY ${AUTOTEST} .
-RUN git clone --single-branch --depth 1 ${TEST_CASES_REPO_URL} cd-test-cases && \
+COPY ${CASES} .
+RUN mkdir cd-test-cases && tar xzf ${CASES} -C cd-test-cases && \
   make LIB_DIR=${LIB_INSTALL_DIR}/native INSTALL_DIR=${BIN_INSTALL_DIR}/testcases \
        -C cd-test-cases install -j`nproc` && \
   rm -rf cd-test-cases
