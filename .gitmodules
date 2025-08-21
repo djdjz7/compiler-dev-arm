@@ -1,0 +1,6 @@
+[submodule "koopa"]
+	path = koopa
+	url = git@github.com:pku-minic/koopa.git
+[submodule "sysy-runtime-lib"]
+	path = sysy-runtime-lib
+	url = git@github.com:pku-minic/sysy-runtime-lib.git
