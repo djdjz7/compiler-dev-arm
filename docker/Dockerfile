@@ -1,5 +1,5 @@
 # base image
-FROM ubuntu:20.04 AS compiler-dev-arm-base
+FROM ubuntu:20.04 AS compiler-dev-bun-base
 
 # some arguments
 ARG KOOPAC=koopac.tar.gz
@@ -104,7 +104,7 @@ RUN mkdir sysyrt && tar xzf ${SYSYRTLIB} -C sysyrt && \
 
 
 # compiler development environment image
-FROM compiler-dev-arm-base AS compiler-dev-arm
+FROM compiler-dev-bun-base AS compiler-dev-bun
 
 # install autotest and test cases
 WORKDIR ${BIN_INSTALL_DIR}

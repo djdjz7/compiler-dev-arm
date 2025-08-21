@@ -1,7 +1,7 @@
 # parameters
 DOCKER ?= docker
-DOCKER_BUILD_TARGET ?= compiler-dev-arm
-DOCKER_IMAGE_NAME ?= compiler-dev-arm
+DOCKER_BUILD_TARGET ?= compiler-dev-bun
+DOCKER_IMAGE_NAME ?= compiler-dev-bun
 DOCKER_BUILD_OPTS ?=
 
 # directories
