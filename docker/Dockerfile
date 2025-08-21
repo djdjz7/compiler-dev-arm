@@ -30,7 +30,7 @@ EOF
 
 # install LLVM's APT
 RUN apt update && \
-  DEBIAN_FRONTEND="noninteractive" apt install -y wget gnupg && \
+  DEBIAN_FRONTEND="noninteractive" apt install -y wget gnupg curl && \
   wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
   echo "deb https://mirrors.tuna.tsinghua.edu.cn/llvm-apt/focal/ llvm-toolchain-focal main" >> /etc/apt/sources.list && \
   echo "deb https://mirrors.tuna.tsinghua.edu.cn/llvm-apt/focal/ llvm-toolchain-focal-12 main" >> /etc/apt/sources.list && \
@@ -59,6 +59,12 @@ RUN wget -O - https://sh.rustup.rs | sh -s -- -y && \
   echo "[source.tuna]" >> ~/.cargo/config && \
   echo "registry = \"sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/\"" >> ~/.cargo/config
 ENV PATH="/root/.cargo/bin:${PATH}"
+
+# install Bun
+COPY bun.sh .
+RUN chmod +x bun.sh && \
+  ./bun.sh 1.2.20 && \
+  rm -f bun.sh
 
 # setup install directories
 RUN mkdir -p ${LIB_INSTALL_DIR} ${BIN_INSTALL_DIR}
