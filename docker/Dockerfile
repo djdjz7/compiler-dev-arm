@@ -31,9 +31,9 @@ EOF
 RUN apt update && \
   DEBIAN_FRONTEND="noninteractive" apt install -y wget gnupg && \
   wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
-  echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal main" >> /etc/apt/sources.list && \
-  echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-12 main" >> /etc/apt/sources.list && \
-  echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main" >> /etc/apt/sources.list
+  echo "deb https://mirrors.tuna.tsinghua.edu.cn/llvm-apt/focal/ llvm-toolchain-focal main" >> /etc/apt/sources.list && \
+  echo "deb https://mirrors.tuna.tsinghua.edu.cn/llvm-apt/focal/ llvm-toolchain-focal-12 main" >> /etc/apt/sources.list && \
+  echo "deb https://mirrors.tuna.tsinghua.edu.cn/llvm-apt/focal/ llvm-toolchain-focal-13 main" >> /etc/apt/sources.list
 
 # install necessary packages
 RUN apt update && DEBIAN_FRONTEND="noninteractive" apt install -y \
@@ -49,14 +49,14 @@ RUN bash update-alternatives-clang.sh 13 100 && \
   rm update-alternatives-clang.sh
 
 # install Rust toolchain
+ENV RUSTUP_UPDATE_ROOT=https://mirrors.tuna.tsinghua.edu.cn/rustup/rustup
+ENV RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup
 RUN wget -O - https://sh.rustup.rs | sh -s -- -y && \
   mkdir -p ~/.cargo && \
   echo "[source.crates-io]" > ~/.cargo/config && \
   echo "replace-with = 'tuna'" >> ~/.cargo/config && \
   echo "[source.tuna]" >> ~/.cargo/config && \
   echo "registry = \"sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/\"" >> ~/.cargo/config
-ENV RUSTUP_UPDATE_ROOT=https://mirrors.tuna.tsinghua.edu.cn/rustup/rustup
-ENV RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # setup install directories
