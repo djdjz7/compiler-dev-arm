@@ -4,3 +4,6 @@
 [submodule "sysy-runtime-lib"]
 	path = sysy-runtime-lib
 	url = git@github.com:pku-minic/sysy-runtime-lib.git
+[submodule "compiler-dev-test-cases"]
+	path = compiler-dev-test-cases
+	url = git@github.com:pku-minic/compiler-dev-test-cases.git
