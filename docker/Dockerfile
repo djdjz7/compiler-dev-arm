@@ -65,6 +65,7 @@ COPY bun.sh .
 RUN chmod +x bun.sh && \
   ./bun.sh 1.2.20 && \
   rm -f bun.sh
+ENV PATH="/root/.bun/bin:${PATH}"
 
 # setup install directories
 RUN mkdir -p ${LIB_INSTALL_DIR} ${BIN_INSTALL_DIR}
